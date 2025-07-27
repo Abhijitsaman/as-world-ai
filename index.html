@@ -36,7 +36,7 @@
         }
 
         /* === নতুন: ডার্ক থিমের জন্য CSS ভেরিয়েবল === */
-        #main-app.dark-theme {
+        #main-app.dark-theme, body.dark-theme {
             --body-bg: #121212;
             --chat-bg: #1e1e1e;
             --header-bg: #2d2d2d;
@@ -59,12 +59,13 @@
             height: 100%;
             overflow: hidden; /* পুরো পেজের স্ক্রলিং বন্ধ করা হয়েছে */
             font-family: var(--primary-font);
-            background-color: #f4f5f7;
-            color: #212529;
+            background-color: var(--body-bg);
+            color: var(--ai-msg-text);
+            transition: var(--theme-transition);
         }
 
         .btn { border: none; cursor: pointer; font-family: var(--primary-font); }
-        .primary-btn { background-color: var(--user-msg-bg); color: var(--user-msg-text); padding: 12px 24px; font-size: 1rem; font-weight: 500; }
+        .primary-btn { background-color: var(--user-msg-bg); color: var(--user-msg-text); padding: 12px 24px; font-size: 1rem; font-weight: 500; border-radius: 8px; }
         .hidden { display: none !important; }
 
         /* === লগইন স্ক্রিন === */
@@ -73,18 +74,23 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: 100vh; /* পুরো স্ক্রিনের উচ্চতা নেবে */
+            height: 100vh;
             text-align: center;
             padding: 20px;
+            background-color: var(--body-bg);
+            transition: var(--theme-transition);
         }
         .welcome-title { font-size: 3rem; font-weight: 700; background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; color: transparent; margin-bottom: 1rem; }
         .welcome-subtitle { font-size: 1.2rem; color: #6c757d; }
+        #main-app.dark-theme .welcome-subtitle { color: var(--icon-color); }
+        .input-field { width: 100%; border-radius: 8px; padding: 14px; background-color: var(--input-bg); color: var(--input-text-color); border: 1px solid var(--border-color); margin-bottom: 1rem; }
 
-        /* === পরিবর্তন শুরু: প্রধান অ্যাপ লেআউট ঠিক করা === */
+
+        /* === প্রধান অ্যাপ লেআউট (অপরিবর্তিত) === */
         #main-app {
             display: flex;
             flex-direction: column;
-            height: 100vh; /* নিশ্চিত করে যে অ্যাপটি পুরো স্ক্রিনের উচ্চতা নেবে */
+            height: 100vh;
             background-color: var(--chat-bg);
             color: var(--ai-msg-text);
             transition: var(--theme-transition);
@@ -97,19 +103,19 @@
             height: 60px;
             border-bottom: 1px solid var(--border-color);
             background-color: var(--header-bg);
-            flex-shrink: 0; /* হেডারকে সঙ্কুচিত হতে বাধা দেয় */
+            flex-shrink: 0;
+            transition: var(--theme-transition);
         }
         
         .chat-messages {
-            flex-grow: 1; /* হেডার এবং ফুটারের মাঝের সমস্ত ফাঁকা জায়গা পূরণ করবে */
-            overflow-y: auto; /* কনটেন্ট বেশি হলে স্ক্রলবার দেখাবে */
+            flex-grow: 1;
+            overflow-y: auto;
             padding: 24px;
             display: flex;
             flex-direction: column;
             gap: 20px;
         }
         
-        /* অ্যাপের ভেতরের ওয়েলকাম স্ক্রিনের জন্য নতুন স্টাইল */
         .chat-messages .welcome-screen {
             display: flex;
             flex-direction: column;
@@ -117,50 +123,53 @@
             align-items: center;
             text-align: center;
             padding: 20px;
-            flex-grow: 1; /* এটি চ্যাট এরিয়ার বাকি অংশ পূরণ করবে এবং কনটেন্টকে মাঝখানে রাখবে */
+            flex-grow: 1;
         }
         
         .chat-input-area {
-            flex-shrink: 0; /* ইনপুট এরিয়াকে সঙ্কুচিত হতে বাধা দেয় */
+            flex-shrink: 0;
             padding: 16px 24px;
             background-color: var(--chat-bg);
             border-top: 1px solid var(--border-color);
             transition: var(--theme-transition);
         }
-        /* === পরিবর্তন শেষ === */
 
-        .header h1 { font-size: 1.25rem; font-weight: 600; text-align: center; flex-grow: 1; color: var(--sidebar-text-color); }
+        .header h1 { font-size: 1.25rem; font-weight: 600; text-align: center; flex-grow: 1; color: var(--ai-msg-text); }
         .menu-btn { background: none; border: none; cursor: pointer; font-size: 1.8rem; padding: 8px; border-radius: 50%; transition: background-color 0.2s; color: var(--icon-color); z-index: 5; }
         .menu-btn:hover { background-color: var(--icon-hover-bg); }
         
-        .sidebar { position: fixed; top: 0; left: 0; width: 260px; height: 100%; background-color: var(--sidebar-bg); color: var(--sidebar-text-color); transform: translateX(-100%); transition: transform 0.3s ease-in-out, var(--theme-transition); z-index: 1001; display: flex; flex-direction: column; padding: 20px 0; }
+        .sidebar { position: fixed; top: 0; left: 0; width: 260px; height: 100%; background-color: var(--sidebar-bg); color: var(--sidebar-text-color); transform: translateX(-100%); transition: transform 0.3s ease-in-out, var(--theme-transition); z-index: 1001; display: flex; flex-direction: column; padding-top: 20px; }
         .sidebar.open { transform: translateX(0); box-shadow: var(--shadow-medium); }
-        .sidebar-header { padding: 0 20px 20px 20px; font-size: 1.2rem; font-weight: 600; border-bottom: 1px solid var(--sidebar-hover-bg); }
-        .sidebar nav { flex-grow: 1; margin-top: 10px; overflow-y: auto; }
-        .sidebar nav a { display: flex; align-items: center; justify-content: space-between; padding: 12px 20px; color: var(--sidebar-text-color); text-decoration: none; font-size: 0.95rem; transition: background-color 0.2s ease; border-radius: 8px; margin: 4px 10px; cursor: pointer; }
-        .sidebar nav a:hover { background-color: var(--sidebar-hover-bg); }
+        .sidebar-header { padding: 0 20px 20px 20px; font-size: 1.2rem; font-weight: 600; border-bottom: 1px solid var(--border-color); color: var(--sidebar-text-color); }
+        .sidebar-content { flex-grow: 1; overflow-y: auto; }
+        .sidebar-content nav a { display: flex; align-items: center; justify-content: space-between; padding: 12px 20px; color: var(--sidebar-text-color); text-decoration: none; font-size: 0.95rem; transition: background-color 0.2s ease; border-radius: 8px; margin: 4px 10px; cursor: pointer; }
+        .sidebar-content nav a:hover { background-color: var(--sidebar-hover-bg); }
         .sidebar-link-main { display: flex; align-items: center; flex-grow: 1; overflow: hidden; }
-        .sidebar-link-main svg { flex-shrink: 0; }
-        .sidebar-link-main span { margin-left: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .history-actions { display: flex; align-items: center; gap: 4px; opacity: 0; transition: opacity 0.2s; }
-        .sidebar nav a:hover .history-actions { opacity: 1; }
-        .history-actions button { background: none; border: none; color: var(--icon-color); padding: 4px; border-radius: 4px; cursor: pointer; }
-        .history-actions button:hover { color: white; background-color: var(--icon-hover-bg); }
-        .history-actions svg { width: 16px; height: 16px; }
-        .sidebar-footer { padding: 10px; border-top: 1px solid var(--sidebar-hover-bg); }
+        .sidebar-link-main svg { flex-shrink: 0; margin-right: 12px; }
+        .sidebar-link-main span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .sidebar-footer { padding: 10px; border-top: 1px solid var(--border-color); }
         .sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease; }
         .sidebar-overlay.open { opacity: 1; visibility: visible; }
         
+        /* User Profile Section in Sidebar */
+        #user-profile-section { padding: 12px 10px; display: flex; flex-direction: column; gap: 10px; }
+        .user-info { display: flex; align-items: center; gap: 12px; padding: 0 10px; }
+        .user-info img { width: 32px; height: 32px; border-radius: 50%; }
+        .user-info span { font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        #logout-btn { background-color: var(--sidebar-hover-bg); color: var(--sidebar-text-color); width: 100%; text-align: center; padding: 10px; border-radius: 8px; font-size: 0.9rem; }
+        #logout-btn:hover { background-color: var(--icon-color); color: var(--sidebar-bg); }
+
         .message { display: flex; flex-direction: column; }
         .message.user-message { align-self: flex-end; align-items: flex-end; max-width: 80%; }
         .message.ai-message { align-self: flex-start; align-items: flex-start; max-width: 90%; }
         .message-bubble { padding: 14px 18px; border-radius: 18px; line-height: 1.6; width: fit-content; max-width: 100%; }
         .user-message .message-bubble { background-color: var(--user-msg-bg); color: var(--user-msg-text); border-bottom-right-radius: 4px; }
         .ai-message .message-bubble { background-color: var(--ai-msg-bg); color: var(--ai-msg-text); border-bottom-left-radius: 4px; width: 100%; }
+        .ai-message .message-bubble pre { background-color: #282c34; color: #abb2bf; padding: 16px; border-radius: 8px; overflow-x: auto; font-family: var(--code-font); }
+        .ai-message .message-bubble code { font-family: var(--code-font); }
         
         .input-wrapper { display: flex; align-items: center; gap: 12px; background-color: var(--input-bg); padding: 8px 12px; border-radius: 28px; border: 1px solid var(--border-color); transition: var(--theme-transition); }
         .input-wrapper:focus-within { box-shadow: 0 0 0 2px var(--user-msg-bg); border-color: var(--user-msg-bg); }
-        
         .input-icon-btn { background: none; border: none; padding: 8px; border-radius: 50%; cursor: pointer; color: var(--icon-color); display: flex; align-items: center; justify-content: center; transition: background-color 0.2s; }
         .input-icon-btn:hover { background-color: var(--icon-hover-bg); }
         .input-icon-btn svg { width: 24px; height: 24px; }
@@ -169,6 +178,7 @@
         #user-input::placeholder { color: var(--icon-color); }
         
         #send-btn { background-color: var(--user-msg-bg); border-radius: 50%; width: 40px; height: 40px; cursor: pointer; transition: background-color 0.2s; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        #send-btn:disabled { background-color: var(--icon-hover-bg); cursor: not-allowed; }
         #send-btn svg { color: var(--user-msg-text); }
         
         .theme-switch-container { display: flex; align-items: center; justify-content: space-between; padding: 12px 20px; margin: 4px 10px; cursor: pointer; border-radius: 8px; transition: background-color 0.2s ease; }
@@ -182,10 +192,10 @@
         input:focus + .slider { box-shadow: 0 0 1px var(--user-msg-bg); }
         input:checked + .slider:before { transform: translateX(20px); }
 
-        @media (max-width: 768px) { .main-content { margin-left: 0 !important; } }
+        @media (max-width: 768px) { .sidebar { width: 280px; } }
     </style>
     
-    <!-- Firebase SDKs অপরিবর্তিত -->
+    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore-compat.js"></script>
@@ -194,7 +204,6 @@
 
     <div class="sidebar-overlay"></div>
     
-    <!-- লগইন স্ক্রিনের জন্য login-container ক্লাস ব্যবহার করা হয়েছে -->
     <div id="login-screen" class="login-container">
         <h2 class="welcome-title">Welcome to AS World AI</h2>
         <p class="welcome-subtitle" style="margin-bottom: 2rem;">Please sign in to continue</p>
@@ -205,24 +214,29 @@
             Sign in with Google
         </button>
     </div>
+
     <div id="display-name-screen" class="login-container hidden">
         <h2 class="welcome-title">What should we call you?</h2>
         <p class="welcome-subtitle" style="margin-bottom: 2rem;">This name will be used to personalize your experience.</p>
         <form id="display-name-form" style="width: 100%; max-width: 350px;">
-            <input type="text" id="display-name-input" class="input-field" placeholder="Enter your full name" required style="border-radius: 8px; padding: 14px; background-color: #ffffff; color: #212529; border: 1px solid #dee2e6;">
-            <button type="submit" class="btn primary-btn" style="border-radius: 8px; width: 100%; max-width: 350px;">Continue</button>
+            <input type="text" id="display-name-input" class="input-field" placeholder="Enter your full name" required>
+            <button type="submit" class="btn primary-btn" style="width: 100%;">Continue</button>
         </form>
     </div>
 
-    <!-- মূল অ্যাপের কাঠামো -->
     <div id="main-app" class="hidden">
         <nav class="sidebar">
             <div class="sidebar-header">Chat History</div>
-            <nav id="chat-history-list">
-                <a id="new-chat-btn">
-                     <!-- ... অপরিবর্তিত ... -->
-                </a>
-            </nav>
+            <div class="sidebar-content">
+                <nav id="chat-history-list">
+                    <a id="new-chat-btn">
+                        <div class="sidebar-link-main">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                            <span>New Chat</span>
+                        </div>
+                    </a>
+                </nav>
+            </div>
             <div class="sidebar-footer">
                 <div class="theme-switch-container">
                     <span>Dark Mode</span>
@@ -231,20 +245,19 @@
                         <span class="slider"></span>
                     </label>
                 </div>
-                <nav id="user-profile-section">
-                    <!-- এই অংশটি JavaScript দিয়ে পূরণ করা হবে -->
-                </nav>
+                <div id="user-profile-section">
+                    <!-- User profile will be injected here by JavaScript -->
+                </div>
             </div>
         </nav>
 
         <header class="header">
             <button class="menu-btn" id="menu-toggle">☰</button>
-            <h1>AS World AI</h1>
+            <h1 id="chat-header-title">AS World AI</h1>
             <div style="width: 48px;"></div>
         </header>
 
         <main class="chat-messages" id="chat-messages">
-            <!-- অ্যাপের ভেতরের ওয়েলকাম স্ক্রিন -->
             <div class="welcome-screen" id="welcome-screen-app">
                 <h2 class="welcome-title">Welcome to AS World AI</h2>
                 <p class="welcome-subtitle" style="color: var(--icon-color)">How can I help you today?</p>
@@ -253,13 +266,7 @@
 
         <footer class="chat-input-area">
             <div class="input-wrapper">
-                <button class="input-icon-btn">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"></path></svg>
-                </button>
                 <textarea id="user-input" placeholder="Message AS World AI" rows="1"></textarea>
-                <button class="input-icon-btn">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 14c1.66 0 2.99-1.34 2.99-3L15 5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.49 6-3.31 6-6.72h-1.7z"></path></svg>
-                </button>
                 <button id="send-btn" class="btn" disabled>
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
                 </button>
@@ -268,12 +275,12 @@
     </div>
 
     <script>
-        // --- Firebase Initialization (অপরিবর্তিত) ---
+        // --- Firebase Initialization ---
         const firebaseConfig = {
             apiKey: "AIzaSyBgLsbzmRuObqOc8Odpzvzud22cVOBCNTc",
             authDomain: "as-world-ai.firebaseapp.com",
             projectId: "as-world-ai",
-            storageBucket: "as-world-ai.firebasestorage.app",
+            storageBucket: "as-world-ai.appspot.com",
             messagingSenderId: "259280050998",
             appId: "1:259280050998:web:6e948e6978e8145e44f197"
         };
@@ -281,25 +288,34 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
         
-        // === থিম ফাংশন অপরিবর্তিত ===
+        // --- থিম ফাংশন ---
         function applyTheme(theme) {
+            const body = document.body;
             const mainApp = document.getElementById('main-app');
-            if (!mainApp) return;
-
+            const loginScreen = document.getElementById('login-screen');
+            const displayNameScreen = document.getElementById('display-name-screen');
+            
             if (theme === 'dark') {
-                mainApp.classList.add('dark-theme');
+                body.classList.add('dark-theme');
+                if (mainApp) mainApp.classList.add('dark-theme');
+                if (loginScreen) loginScreen.classList.add('dark-theme');
+                if (displayNameScreen) displayNameScreen.classList.add('dark-theme');
             } else {
-                mainApp.classList.remove('dark-theme');
+                body.classList.remove('dark-theme');
+                if (mainApp) mainApp.classList.remove('dark-theme');
+                if (loginScreen) loginScreen.classList.remove('dark-theme');
+                if (displayNameScreen) displayNameScreen.classList.remove('dark-theme');
             }
             localStorage.setItem('theme', theme);
         }
 
-        // --- बाकी সমস্ত JavaScript কোড অপরিবর্তিত ---
         document.addEventListener('DOMContentLoaded', () => {
+            // --- DOM Element সিলেকশন ---
             const mainApp = document.getElementById('main-app');
             const loginScreen = document.getElementById('login-screen');
             const displayNameScreen = document.getElementById('display-name-screen');
             const googleBtn = document.getElementById('google-signin-btn');
+            const displayNameForm = document.getElementById('display-name-form');
             const themeToggleCheckbox = document.getElementById('theme-toggle-checkbox');
             
             const chatMessages = document.getElementById('chat-messages');
@@ -312,8 +328,16 @@
             const newChatBtn = document.getElementById('new-chat-btn');
             const chatHistoryList = document.getElementById('chat-history-list');
             const userProfileSection = document.getElementById('user-profile-section');
-            const displayNameForm = document.getElementById('display-name-form');
+            const chatHeaderTitle = document.getElementById('chat-header-title');
 
+            // --- স্টেট ভেরিয়েবল ---
+            let currentUser = null;
+            let currentChatId = null;
+            let isAiThinking = false;
+            let unsubscribeChatHistory = null;
+            let unsubscribeMessages = null;
+
+            // --- প্রাথমিক থিম সেটআপ ---
             const savedTheme = localStorage.getItem('theme') || 'light';
             applyTheme(savedTheme);
             themeToggleCheckbox.checked = savedTheme === 'dark';
@@ -323,13 +347,18 @@
                 applyTheme(newTheme);
             });
 
-            let currentUser = null;
-            let currentChatId = null;
-            let isAiThinking = false;
-            let unsubscribeChatHistory = null;
-            let unsubscribeMessages = null;
+            // --- কোড হাইলাইটিং কনফিগারেশন ---
+            marked.setOptions({
+                highlight: function(code, lang) {
+                    const language = hljs.getLanguage(lang) ? lang : 'plaintext';
+                    return hljs.highlight(code, { language }).value;
+                },
+                langPrefix: 'hljs language-'
+            });
 
+            // --- অথেনটিকেশন স্টেট চেঞ্জ হ্যান্ডলার ---
             auth.onAuthStateChanged(async (user) => {
+                // প্রথমে সব স্ক্রিন হাইড করুন
                 loginScreen.classList.add('hidden');
                 displayNameScreen.classList.add('hidden');
                 mainApp.classList.add('hidden');
@@ -340,22 +369,25 @@
 
                     if (userDocSnap.exists && userDocSnap.data().displayName) {
                         currentUser = { uid: user.uid, ...userDocSnap.data() };
-                        mainApp.classList.remove('hidden');
+                        mainApp.classList.remove('hidden'); // Main app দেখান
                         updateUserProfileUI();
                         loadChatHistory();
                         startNewChat();
                     } else {
+                        // নতুন ব্যবহারকারী বা যার ডিসপ্লে নেম নেই
                         currentUser = user; 
-                        displayNameScreen.classList.remove('hidden');
+                        displayNameScreen.classList.remove('hidden'); // ডিসপ্লে নেম স্ক্রিন দেখান
                     }
                 } else {
+                    // কোনো ব্যবহারকারী লগইন করা নেই
                     currentUser = null;
-                    loginScreen.classList.remove('hidden');
+                    loginScreen.classList.remove('hidden'); // লগইন স্ক্রিন দেখান
                     if (unsubscribeChatHistory) unsubscribeChatHistory();
                     if (unsubscribeMessages) unsubscribeMessages();
                 }
             });
 
+            // --- ইভেন্ট লিসেনার ---
             googleBtn.addEventListener('click', () => {
                 const provider = new firebase.auth.GoogleAuthProvider();
                 auth.signInWithPopup(provider).catch(error => console.error("Auth Error:", error));
@@ -372,54 +404,157 @@
                         photoURL: currentUser.photoURL,
                         createdAt: firebase.firestore.FieldValue.serverTimestamp()
                     }, { merge: true });
+                    // auth state listener স্বয়ংক্রিয়ভাবে UI আপডেট করবে
                 }
             });
-            
-            function updateUserProfileUI() { /* আপনার আসল কোড এখানে থাকবে */ }
+
+            function updateUserProfileUI() {
+                if (!currentUser) return;
+                userProfileSection.innerHTML = `
+                    <div class="user-info">
+                        <img src="${currentUser.photoURL || 'https://via.placeholder.com/32'}" alt="User">
+                        <span>${currentUser.displayName}</span>
+                    </div>
+                    <button id="logout-btn" class="btn">Logout</button>
+                `;
+                document.getElementById('logout-btn').addEventListener('click', () => {
+                    auth.signOut();
+                });
+            }
+
             async function getSimulatedAiResponse(prompt) { 
                 await new Promise(resolve => setTimeout(resolve, 1500));
-                return `This is a simulated response to: "${prompt}". In a real application, this would come from a generative AI model.`;
-             }
+                // একটি বাস্তবসম্মত উত্তর যা Markdown এবং কোড ব্লক ব্যবহার করতে পারে
+                return `আপনি জিজ্ঞাসা করেছেন: "${prompt}". \n\nএটি একটি সিমুলেটেড প্রতিক্রিয়া। একটি বাস্তব অ্যাপ্লিকেশনে, এটি একটি জেনারেটিভ এআই মডেল থেকে আসবে। \n\nউদাহরণস্বরূপ, এখানে একটি জাভাস্ক্রিপ্ট কোড স্নিপেট রয়েছে:\n\n\`\`\`javascript\nfunction greet(name) {\n  console.log(\`Hello, \${name}!\`);\n}\ngreet('World');\n\`\`\``;
+            }
+
             const sendMessage = async () => { 
                 const messageText = userInput.value.trim();
                 if (messageText === '' || isAiThinking || !currentUser) return;
                 
+                isAiThinking = true;
                 userInput.value = '';
                 userInput.style.height = 'auto';
                 sendBtn.disabled = true;
-                isAiThinking = true;
                 welcomeScreen.classList.add('hidden');
-                
-                appendMessage('user', messageText);
-                scrollToBottom();
 
+                let chatToUpdateId = currentChatId;
+
+                // যদি এটি একটি নতুন চ্যাট হয়, প্রথমে চ্যাট তৈরি করুন
+                if (!chatToUpdateId) {
+                    const newChatRef = await db.collection('users').doc(currentUser.uid).collection('chats').add({
+                        title: messageText.substring(0, 40),
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    chatToUpdateId = newChatRef.id;
+                    loadMessages(chatToUpdateId); // নতুন চ্যাট লোড করুন
+                }
+                
+                // Firestore-এ ব্যবহারকারীর মেসেজ যোগ করুন
+                const messagesRef = db.collection('users').doc(currentUser.uid).collection('chats').doc(chatToUpdateId).collection('messages');
+                await messagesRef.add({
+                    sender: 'user',
+                    content: messageText,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                // AI এর রেসপন্সের জন্য অপেক্ষা করুন (এখনও UI তে মেসেজ যোগ করা হয়নি)
                 const aiResponse = await getSimulatedAiResponse(messageText);
-                appendMessage('ai', aiResponse);
+
+                // Firestore-এ AI এর মেসেজ যোগ করুন
+                await messagesRef.add({
+                    sender: 'ai',
+                    content: aiResponse,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
                 isAiThinking = false;
                 sendBtn.disabled = userInput.value.trim() === '';
-                scrollToBottom();
             };
-            function loadChatHistory() { /* আপনার আসল কোড এখানে থাকবে */ }
-            function loadMessages(chatId) { /* আপনার আসল কোড এখানে থাকবে */ }
+            
+            function loadChatHistory() {
+                if (unsubscribeChatHistory) unsubscribeChatHistory();
+                const historyRef = db.collection('users').doc(currentUser.uid).collection('chats').orderBy('createdAt', 'desc');
+
+                unsubscribeChatHistory = historyRef.onSnapshot(snapshot => {
+                    // "New Chat" বাটনটি বাদে বাকি সব মুছে ফেলুন
+                    const existingHistory = chatHistoryList.querySelectorAll('a:not(#new-chat-btn)');
+                    existingHistory.forEach(el => el.remove());
+
+                    snapshot.forEach(doc => {
+                        const chat = doc.data();
+                        const historyLink = document.createElement('a');
+                        historyLink.dataset.chatId = doc.id;
+                        historyLink.innerHTML = `
+                            <div class="sidebar-link-main">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                                <span>${chat.title}</span>
+                            </div>`;
+                        
+                        historyLink.addEventListener('click', () => {
+                            if (currentChatId !== doc.id) {
+                                loadMessages(doc.id);
+                                chatHeaderTitle.textContent = chat.title;
+                            }
+                            toggleSidebar(true);
+                        });
+
+                        chatHistoryList.appendChild(historyLink);
+                    });
+                });
+            }
+
+            function loadMessages(chatId) {
+                if (currentChatId === chatId) return;
+                currentChatId = chatId;
+                if (unsubscribeMessages) unsubscribeMessages();
+                
+                chatMessages.innerHTML = ''; // পুরোনো মেসেজ পরিষ্কার করুন
+                welcomeScreen.classList.add('hidden');
+
+                const messagesRef = db.collection('users').doc(currentUser.uid).collection('chats').doc(chatId).collection('messages').orderBy('timestamp');
+
+                unsubscribeMessages = messagesRef.onSnapshot(snapshot => {
+                    chatMessages.innerHTML = ''; // রিয়েল-টাইম আপডেটের জন্য আবার পরিষ্কার করুন
+                    snapshot.forEach(doc => {
+                        const msg = doc.data();
+                        appendMessage(msg.sender, msg.content);
+                    });
+                    scrollToBottom();
+                });
+            }
+
             function startNewChat() { 
                 currentChatId = null;
                 chatMessages.innerHTML = '';
                 chatMessages.appendChild(welcomeScreen);
                 welcomeScreen.classList.remove('hidden');
-                if (unsubscribeMessages) unsubscribeMessages();
+                chatHeaderTitle.textContent = "AS World AI";
+                if (unsubscribeMessages) {
+                    unsubscribeMessages();
+                    unsubscribeMessages = null;
+                }
             }
+
             const appendMessage = (sender, content) => {
                 const messageDiv = document.createElement('div');
                 messageDiv.classList.add('message', `${sender}-message`);
 
                 const bubble = document.createElement('div');
                 bubble.classList.add('message-bubble');
+                // marked.parse ব্যবহার করে Markdown রেন্ডার করুন
                 bubble.innerHTML = marked.parse(content);
 
                 messageDiv.appendChild(bubble);
                 chatMessages.appendChild(messageDiv);
+                // কোড ব্লক হাইলাইট করার জন্য hljs কে আবার চালাতে হবে
+                messageDiv.querySelectorAll('pre code').forEach((block) => {
+                    hljs.highlightElement(block);
+                });
              };
+
             const scrollToBottom = () => { chatMessages.scrollTop = chatMessages.scrollHeight; };
+
             const toggleSidebar = (forceClose = false) => {
                  if (forceClose || sidebar.classList.contains('open')) {
                     sidebar.classList.remove('open');
@@ -430,6 +565,7 @@
                  }
             };
             
+            // --- General Event Listeners ---
             sendBtn.addEventListener('click', sendMessage);
             userInput.addEventListener('keydown', (e) => { 
                 if (e.key === 'Enter' && !e.shiftKey) { 
