@@ -105,12 +105,19 @@
             background-color: var(--header-bg);
             flex-shrink: 0;
             transition: var(--theme-transition);
+            /* === ১. প্রথম পরিবর্তন: হেডারকে স্থির করা হয়েছে === */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 10;
         }
         
         .chat-messages {
             flex-grow: 1;
             overflow-y: auto;
-            padding: 24px;
+            /* === ৩. তৃতীয় পরিবর্তন: হেডার ও ফুটারের জন্য সঠিক প্যাডিং যুক্ত করা হয়েছে === */
+            padding: 84px 24px 100px; /* টপ: 60px (হেডার) + 24px (স্পেস), বটম: ~76px (ফুটার) + 24px (স্পেস) */
             display: flex;
             flex-direction: column;
             gap: 20px;
@@ -132,6 +139,12 @@
             background-color: var(--chat-bg);
             border-top: 1px solid var(--border-color);
             transition: var(--theme-transition);
+            /* === ২. দ্বিতীয় পরিবর্তন: ইনপুট বক্সকে স্থির করা হয়েছে === */
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            z-index: 10;
         }
 
         .header h1 { font-size: 1.25rem; font-weight: 600; text-align: center; flex-grow: 1; color: var(--ai-msg-text); }
