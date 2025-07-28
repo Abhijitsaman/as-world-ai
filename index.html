@@ -10,6 +10,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 
     <style>
+        /* === ডিফল্ট থিম এখন লাইট মোড === */
         :root {
             --body-bg: #f4f5f7;
             --chat-bg: #ffffff;
@@ -32,10 +33,12 @@
             --gradient-start: #4a90e2;
             --gradient-end: #9013fe;
             --theme-transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+            /* সমাধান ৩ এর জন্য নতুন ভেরিয়েবল */
             --modal-bg: rgba(0, 0, 0, 0.5); 
             --modal-content-bg: #ffffff;
         }
 
+        /* === নতুন: ডার্ক থিমের জন্য CSS ভেরিয়েবল === */
         #main-app.dark-theme, body.dark-theme {
             --body-bg: #121212;
             --chat-bg: #1e1e1e;
@@ -51,6 +54,7 @@
             --icon-color: #b0b0b0;
             --icon-hover-bg: #4a4a4c;
             --shadow-medium: 0 4px 12px rgba(0,0,0,0.25);
+            /* সমাধান ৩ এর জন্য নতুন ভেরিয়েবল */
             --modal-bg: rgba(0, 0, 0, 0.7);
             --modal-content-bg: #2d2d2d;
         }
@@ -59,7 +63,7 @@
         
         html, body {
             height: 100%;
-            overflow: hidden;
+            overflow: hidden; /* পুরো পেজের স্ক্রলিং বন্ধ করা হয়েছে */
             font-family: var(--primary-font);
             background-color: var(--body-bg);
             color: var(--ai-msg-text);
@@ -70,39 +74,23 @@
         .primary-btn { background-color: var(--user-msg-bg); color: var(--user-msg-text); padding: 12px 24px; font-size: 1rem; font-weight: 500; border-radius: 8px; }
         .hidden { display: none !important; }
 
+        /* === লগইন স্ক্রিন === */
         .login-container { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; text-align: center; padding: 20px; background-color: var(--body-bg); transition: var(--theme-transition); }
         .welcome-title { font-size: 3rem; font-weight: 700; background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; color: transparent; margin-bottom: 1rem; }
         .welcome-subtitle { font-size: 1.2rem; color: #6c757d; }
         #main-app.dark-theme .welcome-subtitle { color: var(--icon-color); }
         .input-field { width: 100%; border-radius: 8px; padding: 14px; background-color: var(--input-bg); color: var(--input-text-color); border: 1px solid var(--border-color); margin-bottom: 1rem; }
 
+
+        /* === প্রধান অ্যাপ লেআউট (অপরিবর্তিত) === */
         #main-app { display: flex; flex-direction: column; height: 100vh; background-color: var(--chat-bg); color: var(--ai-msg-text); transition: var(--theme-transition); }
         .header { display: flex; align-items: center; padding: 0 16px; height: 60px; border-bottom: 1px solid var(--border-color); background-color: var(--header-bg); flex-shrink: 0; transition: var(--theme-transition); position: fixed; top: 0; left: 0; width: 100%; z-index: 10; }
         
-        .chat-messages {
-            flex-grow: 1;
-            overflow-y: auto;
-            padding: 84px 24px 120px; /* পরিবর্তন: প্যাডিং-বটম 112px থেকে 120px */
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            box-sizing: border-box;
-        }
+        /* === সমাধান করা কোড === */
+        .chat-messages { flex-grow: 1; overflow-y: auto; padding: 84px 24px 112px; /* সমাধান: ফুটারের উচ্চতা (~88px) এবং অতিরিক্ত ফাঁকা জায়গা (24px) মিলিয়ে প্যাডিং বাড়ানো হয়েছে */ display: flex; flex-direction: column; gap: 20px; }
         
         .chat-messages .welcome-screen { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; flex-grow: 1; }
-        .chat-input-area {
-            flex-shrink: 0;
-            padding: 16px 24px;
-            background-color: var(--chat-bg);
-            border-top: 1px solid var(--border-color);
-            transition: var(--theme-transition);
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            z-index: 10;
-            box-sizing: border-box;
-        }
+        .chat-input-area { flex-shrink: 0; padding: 16px 24px; background-color: var(--chat-bg); border-top: 1px solid var(--border-color); transition: var(--theme-transition); position: fixed; bottom: 0; left: 0; width: 100%; z-index: 10; }
 
         .header h1 { font-size: 1.25rem; font-weight: 600; text-align: center; flex-grow: 1; color: var(--ai-msg-text); }
         .menu-btn { background: none; border: none; cursor: pointer; font-size: 1.8rem; padding: 8px; border-radius: 50%; transition: background-color 0.2s; color: var(--icon-color); z-index: 5; }
@@ -113,9 +101,10 @@
         .sidebar-header { padding: 0 20px 20px 20px; font-size: 1.2rem; font-weight: 600; border-bottom: 1px solid var(--border-color); color: var(--sidebar-text-color); }
         .sidebar-content { flex-grow: 1; overflow-y: auto; }
         
-        .sidebar-content nav a { display: flex; align-items: center; justify-content: space-between; padding: 12px 10px 12px 20px; color: var(--sidebar-text-color); text-decoration: none; font-size: 0.95rem; transition: background-color 0.2s ease; border-radius: 8px; margin: 4px 10px; }
+        /* সমাধান ২: চ্যাট হিস্ট্রি আইটেমের জন্য নতুন স্টাইল */
+        .sidebar-content nav a { display: flex; align-items: center; justify-content: space-between; padding: 12px 10px 12px 20px; color: var(--sidebar-text-color); text-decoration: none; font-size: 0.95rem; transition: background-color 0.2s ease; border-radius: 8px; margin: 4px 10px; } /* কার্সর এখানে নেই */
         .sidebar-content nav a:hover { background-color: var(--sidebar-hover-bg); }
-        .sidebar-link-main { display: flex; align-items: center; flex-grow: 1; overflow: hidden; cursor: pointer; }
+        .sidebar-link-main { display: flex; align-items: center; flex-grow: 1; overflow: hidden; cursor: pointer; } /* কার্সর এখানে যুক্ত করা হয়েছে */
         .sidebar-link-main svg { flex-shrink: 0; margin-right: 12px; }
         .sidebar-link-main span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .chat-item-options { flex-shrink: 0; padding: 6px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
@@ -125,6 +114,7 @@
         .sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease; }
         .sidebar-overlay.open { opacity: 1; visibility: visible; }
         
+        /* User Profile Section in Sidebar */
         #user-profile-section { padding: 12px 10px; display: flex; flex-direction: column; gap: 10px; }
         .user-info { display: flex; align-items: center; gap: 12px; padding: 0 10px; }
         .user-info img { width: 32px; height: 32px; border-radius: 50%; }
@@ -165,6 +155,7 @@
         input:focus + .slider { box-shadow: 0 0 1px var(--user-msg-bg); }
         input:checked + .slider:before { transform: translateX(20px); }
 
+        /* সমাধান ৩: কনফার্মেশন পপ-আপের জন্য নতুন CSS */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -218,14 +209,14 @@
         }
         .modal-btn.cancel-btn {
             background: none;
-            color: #008CBA;
+            color: #008CBA; /* আপনার দেওয়া ছবির মতো সবুজ/নীল রঙ */
         }
         .modal-btn.confirm-btn {
             background: none;
-            color: #008CBA;
+            color: #008CBA; /* আপনার দেওয়া ছবির মতো সবুজ/নীল রঙ */
         }
         .dark-theme .modal-btn.cancel-btn, .dark-theme .modal-btn.confirm-btn {
-            color: #4db5d6;
+            color: #4db5d6; /* ডার্ক মোডের জন্য একটি উজ্জ্বল রঙ */
         }
         .modal-btn:hover {
             background-color: var(--icon-hover-bg);
@@ -234,6 +225,7 @@
         @media (max-width: 768px) { .sidebar { width: 280px; } }
     </style>
     
+    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore-compat.js"></script>
@@ -267,6 +259,7 @@
             <div class="sidebar-header">Chat History</div>
             <div class="sidebar-content">
                 <nav id="chat-history-list">
+                    <!-- New Chat বাটনটিকে a ট্যাগ থেকে div এ পরিবর্তন করা হলো কারণ এটি কোনো লিংক নয় -->
                     <div id="new-chat-btn" style="cursor: pointer; display: flex; align-items: center; padding: 12px 20px; color: var(--sidebar-text-color); font-size: 0.95rem; transition: background-color 0.2s ease; border-radius: 8px; margin: 4px 10px;">
                         <div class="sidebar-link-main">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
@@ -312,6 +305,7 @@
         </footer>
     </div>
     
+    <!-- সমাধান ৩: নতুন কনফার্মেশন পপ-আপ HTML -->
     <div id="confirmation-modal" class="modal-overlay hidden">
         <div class="modal-dialog">
             <p id="modal-message"></p>
@@ -322,7 +316,9 @@
         </div>
     </div>
 
+
     <script>
+        // --- Firebase Initialization ---
         const firebaseConfig = {
             apiKey: "AIzaSyBgLsbzmRuObqOc8Odpzvzud22cVOBCNTc",
             authDomain: "as-world-ai.firebaseapp.com",
@@ -335,6 +331,7 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
         
+        // --- থিম ফাংশন ---
         function applyTheme(theme) {
             const body = document.body;
             const mainApp = document.getElementById('main-app');
@@ -356,6 +353,7 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
+            // --- DOM Element সিলেকশন ---
             const mainApp = document.getElementById('main-app');
             const loginScreen = document.getElementById('login-screen');
             const displayNameScreen = document.getElementById('display-name-screen');
@@ -375,18 +373,21 @@
             const userProfileSection = document.getElementById('user-profile-section');
             const chatHeaderTitle = document.getElementById('chat-header-title');
 
+            // সমাধান ৩ এর জন্য নতুন DOM সিলেকশন
             const confirmationModal = document.getElementById('confirmation-modal');
             const modalMessage = document.getElementById('modal-message');
             const modalCancelBtn = document.getElementById('modal-cancel-btn');
             const modalConfirmBtn = document.getElementById('modal-confirm-btn');
 
+            // --- স্টেট ভেরিয়েবল ---
             let currentUser = null;
             let currentChatId = null;
             let isAiThinking = false;
             let unsubscribeChatHistory = null;
             let unsubscribeMessages = null;
-            let confirmCallback = null;
+            let confirmCallback = null; // সমাধান ৩ এর জন্য নতুন ভেরিয়েবল
 
+            // --- প্রাথমিক থিম সেটআপ ---
             const savedTheme = localStorage.getItem('theme') || 'light';
             applyTheme(savedTheme);
             themeToggleCheckbox.checked = savedTheme === 'dark';
@@ -396,6 +397,7 @@
                 applyTheme(newTheme);
             });
 
+            // --- কোড হাইলাইটিং কনফিগারেশন ---
             marked.setOptions({
                 highlight: function(code, lang) {
                     const language = hljs.getLanguage(lang) ? lang : 'plaintext';
@@ -404,7 +406,9 @@
                 langPrefix: 'hljs language-'
             });
 
+            // --- অথেনটিকেশন স্টেট চেঞ্জ হ্যান্ডলার ---
             auth.onAuthStateChanged(async (user) => {
+                // প্রথমে সব স্ক্রিন হাইড করুন
                 loginScreen.classList.add('hidden');
                 displayNameScreen.classList.add('hidden');
                 mainApp.classList.add('hidden');
@@ -415,22 +419,25 @@
 
                     if (userDocSnap.exists && userDocSnap.data().displayName) {
                         currentUser = { uid: user.uid, ...userDocSnap.data() };
-                        mainApp.classList.remove('hidden');
+                        mainApp.classList.remove('hidden'); // Main app দেখান
                         updateUserProfileUI();
                         loadChatHistory();
                         startNewChat();
                     } else {
+                        // নতুন ব্যবহারকারী বা যার ডিসপ্লে নেম নেই
                         currentUser = user; 
-                        displayNameScreen.classList.remove('hidden');
+                        displayNameScreen.classList.remove('hidden'); // ডিসপ্লে নেম স্ক্রিন দেখান
                     }
                 } else {
+                    // কোনো ব্যবহারকারী লগইন করা নেই
                     currentUser = null;
-                    loginScreen.classList.remove('hidden');
+                    loginScreen.classList.remove('hidden'); // লগইন স্ক্রিন দেখান
                     if (unsubscribeChatHistory) unsubscribeChatHistory();
                     if (unsubscribeMessages) unsubscribeMessages();
                 }
             });
 
+            // --- ইভেন্ট লিসেনার ---
             googleBtn.addEventListener('click', () => {
                 const provider = new firebase.auth.GoogleAuthProvider();
                 auth.signInWithPopup(provider).catch(error => console.error("Auth Error:", error));
@@ -447,6 +454,7 @@
                         photoURL: currentUser.photoURL,
                         createdAt: firebase.firestore.FieldValue.serverTimestamp()
                     }, { merge: true });
+                    // auth state listener স্বয়ংক্রিয়ভাবে UI আপডেট করবে
                 }
             });
 
@@ -459,6 +467,7 @@
                     </div>
                     <button id="logout-btn" class="btn">Logout</button>
                 `;
+                // সমাধান ৩: লগ-আউটের জন্য কনফার্মেশন যোগ করা
                 document.getElementById('logout-btn').addEventListener('click', () => {
                     showConfirmationModal(
                         "Are you sure you want to log out?",
@@ -467,66 +476,103 @@
                 });
             }
 
-            async function getSimulatedAiResponse(prompt) { 
-                await new Promise(resolve => setTimeout(resolve, 1500));
-                return `আপনি জিজ্ঞাসা করেছেন: "${prompt}". \n\nএটি একটি সিমুলেটেড প্রতিক্রিয়া। একটি বাস্তব অ্যাপ্লিকেশনে, এটি একটি জেনারেটিভ এআই মডেল থেকে আসবে। \n\nউদাহরণস্বরূপ, এখানে একটি জাভাস্ক্রিপ্ট কোড স্নিপেট রয়েছে:\n\n\`\`\`javascript\nfunction greet(name) {\n  console.log(\`Hello, \${name}!\`);\n}\ngreet('World');\n\`\`\``;
-            }
-
-            const sendMessage = async () => { 
-                const messageText = userInput.value.trim();
-                if (messageText === '' || isAiThinking || !currentUser) return;
-                
-                isAiThinking = true;
-                userInput.value = '';
-                userInput.style.height = 'auto';
-                sendBtn.disabled = true;
-                welcomeScreen.classList.add('hidden');
-
-                let chatToUpdateId = currentChatId;
-
-                if (!chatToUpdateId) {
-                    const newChatRef = await db.collection('users').doc(currentUser.uid).collection('chats').add({
-                        title: messageText.substring(0, 40),
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            // ==================== প্রথম পরিবর্তন শুরু ====================
+            // getSimulatedAiResponse ফাংশন মুছে নতুন getAiResponse ফাংশন যোগ করা হয়েছে
+            async function getAiResponse(message, history) {
+                try {
+                    const response = await fetch('/.netlify/functions/ask-gemini', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ message, history }),
                     });
-                    chatToUpdateId = newChatRef.id;
-                    loadMessages(chatToUpdateId); 
+
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(errorData.error || 'Server error');
+                    }
+
+                    const data = await response.json();
+                    return data.reply;
+                } catch (error) {
+                    console.error("Error fetching from Netlify function:", error);
+                    return "Sorry, I couldn't connect to the AI. Please try again.";
                 }
-                
-                const messagesRef = db.collection('users').doc(currentUser.uid).collection('chats').doc(chatToUpdateId).collection('messages');
-                await messagesRef.add({
+            }
+            // ==================== প্রথম পরিবর্তন শেষ ====================
+            
+            // ==================== দ্বিতীয় পরিবর্তন শুরু ====================
+            // sendMessage ফাংশন মুছে নতুন ও উন্নত sendMessage ফাংশন যোগ করা হয়েছে
+            const sendMessage = async () => {
+                const messageText = userInput.value.trim();
+                if (!messageText || isAiThinking || !currentUser) return;
+
+                welcomeScreen.classList.add('hidden');
+                let tempChatId = currentChatId;
+
+                // Firestore-এ মেসেজ যোগ করা
+                const userMessageData = {
                     sender: 'user',
                     content: messageText,
                     timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                });
-
-                const aiResponse = await getSimulatedAiResponse(messageText);
-
-                await messagesRef.add({
-                    sender: 'ai',
-                    content: aiResponse,
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                });
+                };
                 
+                if (!tempChatId) {
+                    const chatRef = await db.collection('users').doc(currentUser.uid).collection('chats').add({
+                        title: messageText.substring(0, 30) + '...',
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    tempChatId = chatRef.id;
+                    loadMessages(tempChatId); // নতুন চ্যাট লোড করা
+                }
+                
+                await db.collection('users').doc(currentUser.uid).collection('chats').doc(tempChatId).collection('messages').add(userMessageData);
+                
+                userInput.value = '';
+                isAiThinking = true;
+                // showTypingIndicator(); // এই ফাংশনটি এখনও যোগ করা হয়নি, তাই আপাতত কমেন্ট করা হলো
+
+                // AI-এর উত্তর পাওয়ার জন্য পুরনো ইতিহাস সংগ্রহ করা
+                const messagesRef = db.collection('users').doc(currentUser.uid).collection('chats').doc(tempChatId).collection('messages');
+                const historySnapshot = await messagesRef.orderBy('timestamp', 'asc').get();
+                const history = historySnapshot.docs.map(doc => {
+                    const data = doc.data();
+                    return {
+                        role: data.sender === 'user' ? 'user' : 'model',
+                        parts: [{ text: data.content }],
+                    };
+                });
+
+                // Netlify ফাংশনকে কল করা
+                const aiResponseText = await getAiResponse(messageText, history);
+                
+                const aiMessageData = {
+                    sender: 'ai',
+                    content: aiResponseText,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                };
+                await messagesRef.add(aiMessageData);
+
                 isAiThinking = false;
-                sendBtn.disabled = userInput.value.trim() === '';
-                scrollToBottom();
+                // removeTypingIndicator(); // এই ফাংশনটি এখনও যোগ করা হয়নি, তাই আপাতত কমেন্ট করা হলো
             };
+            // ==================== দ্বিতীয় পরিবর্তন শেষ ====================
             
             function loadChatHistory() {
                 if (unsubscribeChatHistory) unsubscribeChatHistory();
                 const historyRef = db.collection('users').doc(currentUser.uid).collection('chats').orderBy('createdAt', 'desc');
 
                 unsubscribeChatHistory = historyRef.onSnapshot(snapshot => {
+                    // "New Chat" বাটনটি বাদে বাকি সব মুছে ফেলুন
                     const existingHistory = chatHistoryList.querySelectorAll('a.chat-history-item');
                     existingHistory.forEach(el => el.remove());
 
                     snapshot.forEach(doc => {
                         const chat = doc.data();
                         const historyLink = document.createElement('a');
-                        historyLink.classList.add('chat-history-item');
+                        historyLink.classList.add('chat-history-item'); // একটি ক্লাস যোগ করা হলো সহজে চেনার জন্য
                         historyLink.dataset.chatId = doc.id;
                         
+                        // সমাধান ২: ডিলিট মেনু সহ নতুন HTML
                         historyLink.innerHTML = `
                             <div class="sidebar-link-main">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
@@ -544,8 +590,9 @@
                             toggleSidebar(true);
                         });
 
+                        // সমাধান ২: ডিলিট অপশনের জন্য ইভেন্ট
                         historyLink.querySelector('.chat-item-options').addEventListener('click', (e) => {
-                            e.stopPropagation();
+                            e.stopPropagation(); // চ্যাট লোড হওয়া থেকে আটকায়
                             showConfirmationModal(
                                 `Are you sure you want to delete the chat "${chat.title}"?`,
                                 () => { deleteChat(doc.id); }
@@ -557,6 +604,7 @@
                 });
             }
 
+            // সমাধান ২: নতুন চ্যাট ডিলিট ফাংশন
             async function deleteChat(chatIdToDelete) {
                 if (!currentUser || !chatIdToDelete) return;
                 try {
@@ -583,17 +631,18 @@
                 currentChatId = chatId;
                 if (unsubscribeMessages) unsubscribeMessages();
                 
-                chatMessages.innerHTML = '';
+                chatMessages.innerHTML = ''; // পুরোনো মেসেজ পরিষ্কার করুন
                 welcomeScreen.classList.add('hidden');
 
                 const messagesRef = db.collection('users').doc(currentUser.uid).collection('chats').doc(chatId).collection('messages').orderBy('timestamp');
 
                 unsubscribeMessages = messagesRef.onSnapshot(snapshot => {
-                    chatMessages.innerHTML = '';
+                    chatMessages.innerHTML = ''; // রিয়েল-টাইম আপডেটের জন্য আবার পরিষ্কার করুন
                     snapshot.forEach(doc => {
                         const msg = doc.data();
                         appendMessage(msg.sender, msg.content);
                     });
+                    // সমাধান ১: প্রতিটি মেসেজ আপডেটের পর স্ক্রোল করা
                     scrollToBottom();
                 });
             }
@@ -623,18 +672,13 @@
                 messageDiv.querySelectorAll('pre code').forEach((block) => {
                     hljs.highlightElement(block);
                 });
-                scrollToBottom();
-            };
+             };
 
+            // সমাধান ১: স্ক্রলিং বাগ ফিক্স করার জন্য উন্নত scrollToBottom ফাংশন
             const scrollToBottom = () => {
-                requestAnimationFrame(() => {
+                setTimeout(() => {
                     chatMessages.scrollTop = chatMessages.scrollHeight;
-                    setTimeout(() => {
-                        if (Math.abs(chatMessages.scrollHeight - chatMessages.scrollTop - chatMessages.clientHeight) > 1) {
-                            chatMessages.scrollTop = chatMessages.scrollHeight;
-                        }
-                    }, 100);
-                });
+                }, 0);
             };
 
             const toggleSidebar = (forceClose = false) => {
@@ -647,6 +691,7 @@
                  }
             };
 
+            // সমাধান ৩: নতুন কনফার্মেশন পপ-আপ ফাংশন
             function showConfirmationModal(message, onConfirm) {
                 modalMessage.textContent = message;
                 confirmCallback = onConfirm;
@@ -658,6 +703,7 @@
                 confirmCallback = null;
             }
             
+            // --- General Event Listeners ---
             sendBtn.addEventListener('click', sendMessage);
             userInput.addEventListener('keydown', (e) => { 
                 if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } 
@@ -675,6 +721,7 @@
                 toggleSidebar(true);
             });
             
+            // সমাধান ৩ এর জন্য ইভেন্ট লিসেনার
             modalCancelBtn.addEventListener('click', hideConfirmationModal);
             modalConfirmBtn.addEventListener('click', () => {
                 if (typeof confirmCallback === 'function') {
