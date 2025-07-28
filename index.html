@@ -81,7 +81,7 @@
 
         /* === প্রধান অ্যাপ লেআউট (লেআউট বাগ ফিক্স করা হয়েছে) === */
         
-        /* === লেআউট সমাধান: পরিবর্তন শুরু === */
+        /* === সমাধান ১: লেআউট বাগ ফিক্স শুরু === */
 
         /* মূল কন্টেইনারকে Flexbox বানানো হয়েছে এবং ওভারফ্লো হাইড করা হয়েছে */
         #main-app { 
@@ -127,7 +127,7 @@
             z-index: 10;
         }
         
-        /* === লেআউট সমাধান: পরিবর্তন শেষ === */
+        /* === সমাধান ১: লেআউট বাগ ফিক্স শেষ === */
 
         .chat-messages .welcome-screen { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; flex-grow: 1; }
         
@@ -261,7 +261,6 @@
         @media (max-width: 768px) { .sidebar { width: 280px; } }
     </style>
     
-    <!-- বাকি HTML এবং JavaScript অপরিবর্তিত -->
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore-compat.js"></script>
@@ -486,6 +485,7 @@
                 }
             });
 
+            // --- সমাধান ৩: লগআউট কনফার্মেশন শুরু ---
             function updateUserProfileUI() {
                 if (!currentUser) return;
                 userProfileSection.innerHTML = `
@@ -502,6 +502,7 @@
                     );
                 });
             }
+            // --- সমাধান ৩: লগআউট কনফার্মেশন শেষ ---
 
             async function getSimulatedAiResponse(prompt) { 
                 await new Promise(resolve => setTimeout(resolve, 1500));
@@ -548,6 +549,7 @@
                 sendBtn.disabled = userInput.value.trim() === '';
             };
             
+            // --- সমাধান ২: চ্যাট হিস্ট্রি ডিলিট শুরু ---
             function loadChatHistory() {
                 if (unsubscribeChatHistory) unsubscribeChatHistory();
                 const historyRef = db.collection('users').doc(currentUser.uid).collection('chats').orderBy('createdAt', 'desc');
@@ -612,6 +614,7 @@
                     alert("Failed to delete chat. Please try again.");
                 }
             }
+            // --- সমাধান ২: চ্যাট হিস্ট্রি ডিলিট শেষ ---
 
             function loadMessages(chatId) {
                 if (currentChatId === chatId) return;
@@ -629,7 +632,7 @@
                         const msg = doc.data();
                         appendMessage(msg.sender, msg.content);
                     });
-                    scrollToBottom();
+                    scrollToBottom(); // সমাধান ১: মেসেজ লোড হওয়ার পর স্ক্রোল করা হচ্ছে
                 });
             }
 
@@ -660,6 +663,7 @@
                 });
              };
 
+            // --- সমাধান ১: স্ক্রোলিং ফাংশন ---
             const scrollToBottom = () => {
                 setTimeout(() => {
                     chatMessages.scrollTop = chatMessages.scrollHeight;
@@ -676,6 +680,7 @@
                  }
             };
 
+            // --- কনফার্মেশন মডাল ফাংশন ---
             function showConfirmationModal(message, onConfirm) {
                 modalMessage.textContent = message;
                 confirmCallback = onConfirm;
