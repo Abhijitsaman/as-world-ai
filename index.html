@@ -10,7 +10,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 
     <style>
-        /* === ডিফল্ট থিম এখন লাইট মোড === */
         :root {
             --body-bg: #f4f5f7;
             --chat-bg: #ffffff;
@@ -37,7 +36,6 @@
             --modal-content-bg: #ffffff;
         }
 
-        /* === নতুন: ডার্ক থিমের জন্য CSS ভেরিয়েবল === */
         #main-app.dark-theme, body.dark-theme {
             --body-bg: #121212;
             --chat-bg: #1e1e1e;
@@ -61,7 +59,7 @@
         
         html, body {
             height: 100%;
-            overflow: hidden; /* পুরো পেজের স্ক্রলিং বন্ধ করা হয়েছে */
+            overflow: hidden;
             font-family: var(--primary-font);
             background-color: var(--body-bg);
             color: var(--ai-msg-text);
@@ -72,30 +70,39 @@
         .primary-btn { background-color: var(--user-msg-bg); color: var(--user-msg-text); padding: 12px 24px; font-size: 1rem; font-weight: 500; border-radius: 8px; }
         .hidden { display: none !important; }
 
-        /* === লগইন স্ক্রিন === */
         .login-container { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; text-align: center; padding: 20px; background-color: var(--body-bg); transition: var(--theme-transition); }
         .welcome-title { font-size: 3rem; font-weight: 700; background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; color: transparent; margin-bottom: 1rem; }
         .welcome-subtitle { font-size: 1.2rem; color: #6c757d; }
         #main-app.dark-theme .welcome-subtitle { color: var(--icon-color); }
         .input-field { width: 100%; border-radius: 8px; padding: 14px; background-color: var(--input-bg); color: var(--input-text-color); border: 1px solid var(--border-color); margin-bottom: 1rem; }
 
-
-        /* === প্রধান অ্যাপ লেআউট === */
         #main-app { display: flex; flex-direction: column; height: 100vh; background-color: var(--chat-bg); color: var(--ai-msg-text); transition: var(--theme-transition); }
         .header { display: flex; align-items: center; padding: 0 16px; height: 60px; border-bottom: 1px solid var(--border-color); background-color: var(--header-bg); flex-shrink: 0; transition: var(--theme-transition); position: fixed; top: 0; left: 0; width: 100%; z-index: 10; }
         
-        /* === সমাধান করা কোড === */
-        .chat-messages { 
-            flex-grow: 1; 
-            overflow-y: auto; 
-            padding: 84px 24px 112px; /* সমাধান: ফুটারের উচ্চতা (~88px) এবং অতিরিক্ত ফাঁকা জায়গা (24px) মিলিয়ে প্যাডিং বাড়ানো হয়েছে */ 
-            display: flex; 
-            flex-direction: column; 
-            gap: 20px; 
+        .chat-messages {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 84px 24px 120px; /* পরিবর্তন: প্যাডিং-বটম 112px থেকে 120px */
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            box-sizing: border-box;
         }
         
         .chat-messages .welcome-screen { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; flex-grow: 1; }
-        .chat-input-area { flex-shrink: 0; padding: 16px 24px; background-color: var(--chat-bg); border-top: 1px solid var(--border-color); transition: var(--theme-transition); position: fixed; bottom: 0; left: 0; width: 100%; z-index: 10; }
+        .chat-input-area {
+            flex-shrink: 0;
+            padding: 16px 24px;
+            background-color: var(--chat-bg);
+            border-top: 1px solid var(--border-color);
+            transition: var(--theme-transition);
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            z-index: 10;
+            box-sizing: border-box;
+        }
 
         .header h1 { font-size: 1.25rem; font-weight: 600; text-align: center; flex-grow: 1; color: var(--ai-msg-text); }
         .menu-btn { background: none; border: none; cursor: pointer; font-size: 1.8rem; padding: 8px; border-radius: 50%; transition: background-color 0.2s; color: var(--icon-color); z-index: 5; }
@@ -227,7 +234,6 @@
         @media (max-width: 768px) { .sidebar { width: 280px; } }
     </style>
     
-    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore-compat.js"></script>
@@ -278,6 +284,7 @@
                     </label>
                 </div>
                 <div id="user-profile-section">
+                    <!-- User profile will be injected here by JavaScript -->
                 </div>
             </div>
         </nav>
@@ -315,9 +322,7 @@
         </div>
     </div>
 
-
     <script>
-        // --- Firebase Initialization ---
         const firebaseConfig = {
             apiKey: "AIzaSyBgLsbzmRuObqOc8Odpzvzud22cVOBCNTc",
             authDomain: "as-world-ai.firebaseapp.com",
@@ -330,7 +335,6 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
         
-        // --- থিম ফাংশন ---
         function applyTheme(theme) {
             const body = document.body;
             const mainApp = document.getElementById('main-app');
@@ -352,7 +356,6 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            // --- DOM Element সিলেকশন ---
             const mainApp = document.getElementById('main-app');
             const loginScreen = document.getElementById('login-screen');
             const displayNameScreen = document.getElementById('display-name-screen');
@@ -377,15 +380,13 @@
             const modalCancelBtn = document.getElementById('modal-cancel-btn');
             const modalConfirmBtn = document.getElementById('modal-confirm-btn');
 
-            // --- স্টেট ভেরিয়েবল ---
             let currentUser = null;
             let currentChatId = null;
             let isAiThinking = false;
             let unsubscribeChatHistory = null;
             let unsubscribeMessages = null;
-            let confirmCallback = null; 
+            let confirmCallback = null;
 
-            // --- প্রাথমিক থিম সেটআপ ---
             const savedTheme = localStorage.getItem('theme') || 'light';
             applyTheme(savedTheme);
             themeToggleCheckbox.checked = savedTheme === 'dark';
@@ -395,7 +396,6 @@
                 applyTheme(newTheme);
             });
 
-            // --- কোড হাইলাইটিং কনফিগারেশন ---
             marked.setOptions({
                 highlight: function(code, lang) {
                     const language = hljs.getLanguage(lang) ? lang : 'plaintext';
@@ -404,7 +404,6 @@
                 langPrefix: 'hljs language-'
             });
 
-            // --- অথেনটিকেশন স্টেট চেঞ্জ হ্যান্ডলার ---
             auth.onAuthStateChanged(async (user) => {
                 loginScreen.classList.add('hidden');
                 displayNameScreen.classList.add('hidden');
@@ -432,7 +431,6 @@
                 }
             });
 
-            // --- ইভেন্ট লিসেনার ---
             googleBtn.addEventListener('click', () => {
                 const provider = new firebase.auth.GoogleAuthProvider();
                 auth.signInWithPopup(provider).catch(error => console.error("Auth Error:", error));
@@ -512,6 +510,7 @@
                 
                 isAiThinking = false;
                 sendBtn.disabled = userInput.value.trim() === '';
+                scrollToBottom();
             };
             
             function loadChatHistory() {
@@ -584,7 +583,7 @@
                 currentChatId = chatId;
                 if (unsubscribeMessages) unsubscribeMessages();
                 
-                chatMessages.innerHTML = ''; 
+                chatMessages.innerHTML = '';
                 welcomeScreen.classList.add('hidden');
 
                 const messagesRef = db.collection('users').doc(currentUser.uid).collection('chats').doc(chatId).collection('messages').orderBy('timestamp');
@@ -595,7 +594,7 @@
                         const msg = doc.data();
                         appendMessage(msg.sender, msg.content);
                     });
-                    scrollToBottom(); // প্রতিটি মেসেজ আপডেটের পর স্ক্রোল করা
+                    scrollToBottom();
                 });
             }
 
@@ -624,13 +623,18 @@
                 messageDiv.querySelectorAll('pre code').forEach((block) => {
                     hljs.highlightElement(block);
                 });
-             };
+                scrollToBottom();
+            };
 
-            // সমাধান: স্ক্রলিং বাগ ফিক্স করার জন্য উন্নত scrollToBottom ফাংশন
             const scrollToBottom = () => {
-                setTimeout(() => {
+                requestAnimationFrame(() => {
                     chatMessages.scrollTop = chatMessages.scrollHeight;
-                }, 0); // রেন্ডারিং এর জন্য ব্রাউজারকে সময় দেওয়া
+                    setTimeout(() => {
+                        if (Math.abs(chatMessages.scrollHeight - chatMessages.scrollTop - chatMessages.clientHeight) > 1) {
+                            chatMessages.scrollTop = chatMessages.scrollHeight;
+                        }
+                    }, 100);
+                });
             };
 
             const toggleSidebar = (forceClose = false) => {
@@ -642,7 +646,7 @@
                     sidebarOverlay.classList.add('open');
                  }
             };
-            
+
             function showConfirmationModal(message, onConfirm) {
                 modalMessage.textContent = message;
                 confirmCallback = onConfirm;
@@ -654,7 +658,6 @@
                 confirmCallback = null;
             }
             
-            // --- General Event Listeners ---
             sendBtn.addEventListener('click', sendMessage);
             userInput.addEventListener('keydown', (e) => { 
                 if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } 
