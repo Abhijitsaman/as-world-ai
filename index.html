@@ -85,7 +85,10 @@
         /* === প্রধান অ্যাপ লেআউট (অপরিবর্তিত) === */
         #main-app { display: flex; flex-direction: column; height: 100vh; background-color: var(--chat-bg); color: var(--ai-msg-text); transition: var(--theme-transition); }
         .header { display: flex; align-items: center; padding: 0 16px; height: 60px; border-bottom: 1px solid var(--border-color); background-color: var(--header-bg); flex-shrink: 0; transition: var(--theme-transition); position: fixed; top: 0; left: 0; width: 100%; z-index: 10; }
-        .chat-messages { flex-grow: 1; overflow-y: auto; padding: 84px 24px 100px; /* টপ: 60px (হেডার) + 24px (স্পেস), বটম: ~76px (ফুটার) + 24px (স্পেস) */ display: flex; flex-direction: column; gap: 20px; }
+        
+        /* === সমাধান করা কোড === */
+        .chat-messages { flex-grow: 1; overflow-y: auto; padding: 84px 24px 112px; /* সমাধান: ফুটারের উচ্চতা (~88px) এবং অতিরিক্ত ফাঁকা জায়গা (24px) মিলিয়ে প্যাডিং বাড়ানো হয়েছে */ display: flex; flex-direction: column; gap: 20px; }
+        
         .chat-messages .welcome-screen { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; flex-grow: 1; }
         .chat-input-area { flex-shrink: 0; padding: 16px 24px; background-color: var(--chat-bg); border-top: 1px solid var(--border-color); transition: var(--theme-transition); position: fixed; bottom: 0; left: 0; width: 100%; z-index: 10; }
 
