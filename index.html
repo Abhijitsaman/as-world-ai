@@ -36,12 +36,10 @@
         --theme-transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
         --modal-bg: rgba(0, 0, 0, 0.5); 
         --modal-content-bg: #ffffff;
-        /* সমাধান ৪: কোড ব্লকের জন্য নতুন ভেরিয়েবল */
         --code-block-bg: #2d2d2d;
         --code-block-header-bg: #3a3a3c;
         --code-block-text: #e0e0e0;
         --code-block-copy-btn-hover: #4a4a4c;
-        /* সমাধান ৩: অ্যাকশন মেনুর জন্য ভেরিয়েবল */
         --selected-message-outline: #007bff;
     }
 
@@ -91,9 +89,9 @@
     /* === প্রধান অ্যাপ লেআউট === */
     #main-app { display: flex; flex-direction: column; height: 100vh; background-color: var(--chat-bg); color: var(--ai-msg-text); transition: var(--theme-transition); }
     .header { display: flex; align-items: center; padding: 0 16px; height: 60px; border-bottom: 1px solid var(--border-color); background-color: var(--header-bg); flex-shrink: 0; transition: var(--theme-transition); position: fixed; top: 0; left: 0; width: 100%; z-index: 10; }
+    /* চ্যাট মেসেজের প্যাডিং পরিবর্তন করা হয়েছে যাতে নতুন ইনপুট বারটি কোনো মেসেজ ঢেকে না ফেলে */
     .chat-messages { flex-grow: 1; overflow-y: auto; padding: 76px 24px 100px; display: flex; flex-direction: column; gap: 20px; }
     .chat-messages .welcome-screen { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; flex-grow: 1; }
-    .chat-input-area { flex-shrink: 0; padding: 8px 16px; background-color: var(--chat-bg); border-top: 1px solid var(--border-color); transition: var(--theme-transition); position: fixed; bottom: 0; left: 0; width: 100%; z-index: 10; }
     .header h1 { font-size: 1.25rem; font-weight: 600; text-align: center; flex-grow: 1; color: var(--ai-msg-text); }
     .menu-btn { background: none; border: none; cursor: pointer; font-size: 1.8rem; padding: 8px; border-radius: 50%; transition: background-color 0.2s; color: var(--icon-color); z-index: 5; }
     .menu-btn:hover { background-color: var(--icon-hover-bg); }
@@ -131,11 +129,11 @@
     .ai-message .message-bubble p:last-child { margin-bottom: 0; }
     .message-bubble.selected { outline: 2px solid var(--selected-message-outline); outline-offset: 2px; }
 
-    /* সমাধান ৪: নতুন এবং উন্নত কোড ব্লক স্টাইল */
+    /* কোড ব্লক স্টাইল */
     .ai-message .message-bubble pre {
         background-color: var(--code-block-bg);
         border-radius: 8px;
-        overflow: hidden; /* ভেতরের কন্টেন্টকে রাউন্ডেড কর্নারের মধ্যে রাখতে */
+        overflow: hidden; 
         margin: 12px 0;
         position: relative;
     }
@@ -172,15 +170,117 @@
         font-family: var(--code-font);
         font-size: 0.9rem;
     }
+    
+    /* === পরিবর্তন ২: নতুন ফ্লোটিং ইনপুট বারের স্টাইল === */
+    .chat-input-area {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        width: auto;
+        height: auto;
+        z-index: 20;
+        display: flex;
+        justify-content: flex-end;
+        align-items: flex-end;
+        pointer-events: none; /* কন্টেইনার যেন ক্লিক ইভেন্ট ব্লক না করে */
+    }
 
-    /* ইনপুট এরিয়া */
-    .input-wrapper { display: flex; align-items: center; gap: 12px; background-color: var(--input-bg); padding: 4px 8px; border-radius: 28px; border: 1px solid var(--border-color); transition: var(--theme-transition); }
-    .input-wrapper:focus-within { box-shadow: 0 0 0 2px var(--user-msg-bg); border-color: var(--user-msg-bg); }
-    #user-input { width: 100%; border: none; outline: none; background: none; resize: none; font-size: 1rem; font-family: var(--primary-font); max-height: 150px; overflow-y: auto; line-height: 1.5; align-self: center; color: var(--input-text-color); padding: 8px 0; }
-    #user-input::placeholder { color: var(--icon-color); }
-    #send-btn { background-color: var(--user-msg-bg); border-radius: 50%; width: 40px; height: 40px; cursor: pointer; transition: background-color 0.2s; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    #send-btn:disabled { background-color: var(--icon-hover-bg); cursor: not-allowed; }
-    #send-btn svg { color: var(--user-msg-text); }
+    #fab-open-input {
+        width: 56px;
+        height: 56px;
+        background-color: var(--user-msg-bg);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: var(--shadow-medium);
+        cursor: pointer;
+        pointer-events: auto; /* বাটন যেন ক্লিক করা যায় */
+        transition: transform 0.2s ease-out, opacity 0.2s ease-out;
+        transform: scale(1);
+        opacity: 1;
+    }
+    #fab-open-input.hidden {
+        transform: scale(0.5);
+        opacity: 0;
+        pointer-events: none;
+    }
+    #fab-open-input svg {
+        color: var(--user-msg-text);
+        width: 28px;
+        height: 28px;
+    }
+
+    .input-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background-color: var(--input-bg);
+        border-radius: 28px;
+        border: 1px solid var(--border-color);
+        box-shadow: var(--shadow-medium);
+        padding: 4px;
+        width: calc(100vw - 48px); /* স্ক্রিনের প্রস্থের সাথে মানানসই */
+        max-width: 700px;
+        pointer-events: auto; /* ইনপুট বার যেন ব্যবহার করা যায় */
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+        transform: translateY(20px) scale(0.95);
+        opacity: 0;
+        visibility: hidden;
+    }
+    
+    .chat-input-area.expanded .input-wrapper {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .chat-input-area.expanded {
+        left: 24px;
+        right: 24px;
+        width: auto; /* যেন বাম ও ডান পাশের প্যাডিং কাজ করে */
+        justify-content: center;
+    }
+    
+    #user-input {
+        width: 100%;
+        border: none;
+        outline: none;
+        background: none;
+        resize: none;
+        font-size: 1rem;
+        font-family: var(--primary-font);
+        max-height: 150px;
+        overflow-y: auto;
+        line-height: 1.5;
+        align-self: center;
+        color: var(--input-text-color);
+        padding: 8px 12px;
+    }
+    #user-input::placeholder {
+        color: var(--icon-color);
+    }
+
+    #send-btn {
+        background-color: var(--user-msg-bg);
+        border-radius: 50%;
+        width: 44px;
+        height: 44px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+    #send-btn:disabled {
+        background-color: var(--icon-hover-bg);
+        cursor: not-allowed;
+    }
+    #send-btn svg {
+        color: var(--user-msg-text);
+    }
+    /* === পরিবর্তন ২ শেষ === */
     
     /* থিম সুইচ (অপরিবর্তিত) */
     .theme-switch-container { display: flex; align-items: center; justify-content: space-between; padding: 12px 20px; margin: 4px 10px; cursor: pointer; border-radius: 8px; transition: background-color 0.2s ease; }
@@ -205,7 +305,7 @@
     .dark-theme .modal-btn.cancel-btn, .dark-theme .modal-btn.confirm-btn { color: #4db5d6; }
     .modal-btn:hover { background-color: var(--icon-hover-bg); }
     
-    /* সমাধান ২: নতুন টাইপিং ইন্ডিকেটর স্টাইল */
+    /* টাইপিং ইন্ডিকেটর স্টাইল */
     .typing-indicator-bubble { display: flex; align-items: center; padding: 20px 18px; }
     .typing-indicator-bubble .dot { width: 8px; height: 8px; margin: 0 4px; background-color: var(--icon-color); border-radius: 50%; display: inline-block; animation: dot-bounce 1.4s infinite ease-in-out both; }
     .typing-indicator-bubble .dot:nth-child(2) { animation-delay: -0.16s; }
@@ -215,7 +315,7 @@
         40% { transform: scale(1.0); }
     }
 
-    /* সমাধান ৩: নতুন মেসেজ অ্যাকশন মেনু স্টাইল */
+    /* মেসেজ অ্যাকশন মেনু স্টাইল */
     #message-action-menu {
         position: absolute;
         background-color: var(--modal-content-bg);
@@ -257,7 +357,21 @@
         fill: currentColor;
     }
     
-    @media (max-width: 768px) { .sidebar { width: 280px; } }
+    @media (max-width: 768px) { 
+        .sidebar { width: 280px; }
+        /* মোবাইলের জন্য ইনপুট বার ও FAB-এর অবস্থান ঠিক করা */
+        .chat-input-area {
+            bottom: 16px;
+            right: 16px;
+        }
+        .chat-input-area.expanded {
+            left: 16px;
+            right: 16px;
+        }
+        .input-wrapper {
+            width: calc(100vw - 32px);
+        }
+    }
 </style>
 
 <!-- Firebase SDKs -->
@@ -328,7 +442,13 @@
         </div>
     </main>
 
-    <footer class="chat-input-area">
+    <!-- পরিবর্তন ২: নতুন ফ্লোটিং ইনপুট বারের HTML -->
+    <footer class="chat-input-area" id="chat-input-area">
+        <!-- এই বাটনটি ইনপুট বার খুলতে ব্যবহৃত হবে -->
+        <button class="btn" id="fab-open-input">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.59a2 2 0 0 1-2.83-2.83l.79-.79"></path></svg>
+        </button>
+        <!-- এটি হলো আসল ইনপুট বার যা ডিফল্টরূপে লুকানো থাকে -->
         <div class="input-wrapper">
             <textarea id="user-input" placeholder="Message AS World AI" rows="1"></textarea>
             <button id="send-btn" class="btn" disabled>
@@ -338,7 +458,7 @@
     </footer>
 </div>
 
-<!-- সমাধান ৩: নতুন অ্যাকশন মেনুর HTML -->
+<!-- মেসেজ অ্যাকশন মেনুর HTML (অপরিবর্তিত) -->
 <div id="message-action-menu" class="hidden">
     <button class="action-menu-btn" data-action="copy" title="Copy">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
@@ -351,7 +471,7 @@
     </button>
 </div>
 
-<!-- কনফার্মেশন পপ-আপ HTML -->
+<!-- কনফার্মেশন পপ-আপ HTML (অপরিবর্তিত) -->
 <div id="confirmation-modal" class="modal-overlay hidden">
     <div class="modal-dialog">
         <p id="modal-message"></p>
@@ -378,11 +498,14 @@
     
     // --- থিম ফাংশন (অপরিবর্তিত) ---
     function applyTheme(theme) {
+        const mainApp = document.getElementById('main-app'); // main-app কেও টার্গেট করা হলো
         const body = document.body;
         if (theme === 'dark') {
             body.classList.add('dark-theme');
+            if(mainApp) mainApp.classList.add('dark-theme');
         } else {
             body.classList.remove('dark-theme');
+            if(mainApp) mainApp.classList.remove('dark-theme');
         }
         localStorage.setItem('theme', theme);
     }
@@ -397,8 +520,6 @@
         const themeToggleCheckbox = document.getElementById('theme-toggle-checkbox');
         
         const chatMessages = document.getElementById('chat-messages');
-        const userInput = document.getElementById('user-input');
-        const sendBtn = document.getElementById('send-btn');
         const welcomeScreen = document.getElementById('welcome-screen-app');
         const menuToggle = document.getElementById('menu-toggle');
         const sidebar = document.querySelector('.sidebar');
@@ -408,12 +529,16 @@
         const userProfileSection = document.getElementById('user-profile-section');
         const chatHeaderTitle = document.getElementById('chat-header-title');
 
+        // পরিবর্তন ২: নতুন ইনপুট সিস্টেমের জন্য DOM সিলেকশন
+        const chatInputArea = document.getElementById('chat-input-area');
+        const fabOpenInput = document.getElementById('fab-open-input');
+        const userInput = document.getElementById('user-input');
+        const sendBtn = document.getElementById('send-btn');
+
         const confirmationModal = document.getElementById('confirmation-modal');
         const modalMessage = document.getElementById('modal-message');
         const modalCancelBtn = document.getElementById('modal-cancel-btn');
         const modalConfirmBtn = document.getElementById('modal-confirm-btn');
-
-        // সমাধান ৩: অ্যাকশন মেনুর জন্য DOM সিলেকশন
         const messageActionMenu = document.getElementById('message-action-menu');
 
         // --- স্টেট ভেরিয়েবল ---
@@ -423,7 +548,7 @@
         let unsubscribeChatHistory = null;
         let unsubscribeMessages = null;
         let confirmCallback = null;
-        let currentlySelectedMessage = null; // সমাধান ৩: কোন মেসেজ সিলেক্ট করা হয়েছে তা ট্র্যাক করতে
+        let currentlySelectedMessage = null;
 
         // --- প্রাথমিক থিম সেটআপ ---
         const savedTheme = localStorage.getItem('theme') || 'light';
@@ -441,7 +566,7 @@
                 return hljs.highlight(code, { language }).value;
             },
             langPrefix: 'hljs language-',
-            breaks: true, // নতুন লাইনকে <br> হিসাবে রেন্ডার করতে
+            breaks: true,
         });
 
         // --- অথেনটিকেশন স্টেট চেঞ্জ হ্যান্ডলার (অপরিবর্তিত) ---
@@ -455,6 +580,7 @@
                 if (userDocSnap.exists && userDocSnap.data().displayName) {
                     currentUser = { uid: user.uid, ...userDocSnap.data() };
                     mainApp.classList.remove('hidden');
+                    applyTheme(localStorage.getItem('theme') || 'light'); // থিম ঠিকভাবে প্রয়োগ করা
                     updateUserProfileUI();
                     loadChatHistory();
                     startNewChat();
@@ -504,7 +630,6 @@
         // --- Gemini AI এর সাথে সংযোগ স্থাপনের ফাংশন ---
         async function getAiResponse(message, history) {
             try {
-                // এখানে আপনার Netlify ফাংশনের URL দিন
                 const response = await fetch('/.netlify/functions/ask-gemini', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -522,7 +647,7 @@
             }
         }
         
-        // --- মেসেজ পাঠানোর ফাংশন (গুরুত্বপূর্ণ পরিবর্তনসহ) ---
+        // --- মেসেজ পাঠানোর ফাংশন ---
         const sendMessage = async () => {
             const messageText = userInput.value.trim();
             if (!messageText || isAiThinking || !currentUser) return;
@@ -547,19 +672,16 @@
             
             await db.collection('users').doc(currentUser.uid).collection('chats').doc(tempChatId).collection('messages').add(userMessageData);
             
-            // =========================================================
-            // সমাধান ১: টাইপিং বারের উচ্চতা রিসেট করার সমস্যা সমাধান
-            // =========================================================
-            userInput.value = ''; // ইনপুট বক্স খালি করা
-            userInput.style.height = 'auto'; // উচ্চতা ডিফল্ট অবস্থায় আনা
-            sendBtn.disabled = true; // সেন্ড বাটন নিষ্ক্রিয় করা
-            // =========================================================
+            userInput.value = '';
+            userInput.style.height = 'auto'; 
+            sendBtn.disabled = true;
+            collapseInputBar(); // পরিবর্তন ২: মেসেজ পাঠানোর পর ইনপুট বার বন্ধ করা
             
             isAiThinking = true;
-            showTypingIndicator(); // সমাধান ২: টাইপিং ইন্ডিকেটর দেখানো
+            showTypingIndicator();
 
             const messagesRef = db.collection('users').doc(currentUser.uid).collection('chats').doc(tempChatId).collection('messages');
-            const historySnapshot = await messagesRef.orderBy('timestamp', 'asc').limitToLast(20).get(); // শেষ ২০টি মেসেজ নেওয়া হলো
+            const historySnapshot = await messagesRef.orderBy('timestamp', 'asc').limitToLast(20).get();
             const history = historySnapshot.docs.map(doc => {
                 const data = doc.data();
                 return {
@@ -571,7 +693,7 @@
             const aiResponseText = await getAiResponse(messageText, history);
             
             isAiThinking = false;
-            removeTypingIndicator(); // সমাধান ২: টাইপিং ইন্ডিকেটর সরানো
+            removeTypingIndicator();
 
             const aiMessageData = {
                 sender: 'ai',
@@ -581,7 +703,7 @@
             await messagesRef.add(aiMessageData);
         };
         
-        // --- চ্যাট হিস্ট্রি লোড এবং ডিলিট ---
+        // --- চ্যাট হিস্ট্রি লোড এবং ডিলিট (অপরিবর্তিত) ---
         function loadChatHistory() {
             if (unsubscribeChatHistory) unsubscribeChatHistory();
             const historyRef = db.collection('users').doc(currentUser.uid).collection('chats').orderBy('createdAt', 'desc');
@@ -649,7 +771,6 @@
                     if (change.type === "added") {
                         const msg = change.doc.data();
                         const messageId = change.doc.id;
-                        // সমাধান ৩: মেসেজ ডিলিট করার জন্য messageId পাস করা হচ্ছে
                         appendMessage(msg.sender, msg.content, messageId, msg.timestamp);
                     }
                     if (change.type === "removed") {
@@ -677,21 +798,29 @@
         const appendMessage = (sender, content, messageId, timestamp) => {
             const messageDiv = document.createElement('div');
             messageDiv.classList.add('message', `${sender}-message`);
-            messageDiv.dataset.messageId = messageId; // Firestore ডকুমেন্ট ID সংরক্ষণ
+            messageDiv.dataset.messageId = messageId; 
 
             const bubble = document.createElement('div');
             bubble.classList.add('message-bubble');
             
-            // সমাধান ৪: কোড ব্লকের জন্য `marked.parse` ব্যবহার
             bubble.innerHTML = marked.parse(content);
-            bubble.dataset.rawContent = content; // কপি করার জন্য আসল টেক্সট সংরক্ষণ
+            bubble.dataset.rawContent = content; 
 
             messageDiv.appendChild(bubble);
             chatMessages.appendChild(messageDiv);
+            
+            // =========================================================
+            // পরিবর্তন ১: সিনট্যাক্স হাইলাইটিং সঠিকভাবে প্রয়োগ করা
+            // =========================================================
+            const codeBlocks = messageDiv.querySelectorAll('pre code');
+            codeBlocks.forEach((block) => {
+                hljs.highlightElement(block);
+            });
+            // =========================================================
 
-            // সমাধান ৪: কোড ব্লক খুঁজে কপি বাটন যোগ করা
-            const codeBlocks = messageDiv.querySelectorAll('pre');
-            codeBlocks.forEach(pre => {
+            // কোড ব্লক খুঁজে কপি বাটন যোগ করা (আগের মতোই)
+            const preElements = messageDiv.querySelectorAll('pre');
+            preElements.forEach(pre => {
                 const code = pre.querySelector('code');
                 const langMatch = code.className.match(/language-(\S+)/);
                 const lang = langMatch ? langMatch[1] : 'code';
@@ -721,7 +850,7 @@
             scrollToBottom();
          };
         
-        // সমাধান ২: টাইপিং ইন্ডিকেটর ফাংশন
+        // টাইপিং ইন্ডিকেটর ফাংশন
         function showTypingIndicator() {
             if (document.getElementById('typing-indicator')) return;
             const indicatorDiv = document.createElement('div');
@@ -741,14 +870,13 @@
             if (indicator) indicator.remove();
         }
         
-        // সমাধান ৩: মেসেজ ডিলিট করার ফাংশন
+        // মেসেজ ডিলিট করার ফাংশন
         async function deleteMessage(messageId) {
             if (!currentUser || !currentChatId || !messageId) return;
             try {
                 await db.collection('users').doc(currentUser.uid)
                           .collection('chats').doc(currentChatId)
                           .collection('messages').doc(messageId).delete();
-                // onSnapshot স্বয়ংক্রিয়ভাবে UI আপডেট করবে
             } catch (error) {
                 console.error("Error deleting message:", error);
                 alert("Failed to delete message.");
@@ -775,7 +903,20 @@
             confirmationModal.classList.add('hidden');
             confirmCallback = null;
         }
-        
+
+        // --- পরিবর্তন ২: ফ্লোটিং ইনপুট বারের জন্য ফাংশন ---
+        function expandInputBar() {
+            chatInputArea.classList.add('expanded');
+            fabOpenInput.classList.add('hidden');
+            userInput.focus(); // কি-বোর্ড আনার জন্য ফোকাস করা
+        }
+
+        function collapseInputBar() {
+            chatInputArea.classList.remove('expanded');
+            fabOpenInput.classList.remove('hidden');
+            userInput.blur(); // ফোকাস সরানো
+        }
+
         // --- সাধারণ ইভেন্ট লিসেনার ---
         sendBtn.addEventListener('click', sendMessage);
         userInput.addEventListener('keydown', (e) => { 
@@ -785,7 +926,7 @@
             sendBtn.disabled = userInput.value.trim() === '' || isAiThinking; 
             userInput.style.height = 'auto';
             userInput.style.height = (userInput.scrollHeight) + 'px';
-            scrollToBottom();
+            // scrollToBottom(); // এই লাইনটি এখন প্রয়োজন নেই কারণ ইনপুট বার ভাসমান
         });
 
         menuToggle.addEventListener('click', () => toggleSidebar());
@@ -798,27 +939,30 @@
             hideConfirmationModal();
         });
 
-        // সমাধান ৩: মেসেজ অ্যাকশন মেনুর জন্য ইভেন্ট লিসেনার
-        chatMessages.addEventListener('click', (e) => {
-            const clickedBubble = e.target.closest('.message-bubble');
+        // --- পরিবর্তন ২: ফ্লোটিং ইনপুট বারের জন্য ইভেন্ট লিসেনার ---
+        fabOpenInput.addEventListener('click', expandInputBar);
+
+        document.addEventListener('click', (e) => {
+            // ইনপুট বার খোলা থাকলে এবং ক্লিকের টার্গেট যদি ইনপুট বারের বাইরে হয়
+            if (chatInputArea.classList.contains('expanded') && !chatInputArea.contains(e.target)) {
+                collapseInputBar();
+            }
             
-            // যদি মেনু বাদে অন্য কোথাও ক্লিক করা হয়, মেনু হাইড করুন
+            // মেসেজ অ্যাকশন মেনুর জন্য একই রকম লজিক
+            const clickedBubble = e.target.closest('.message-bubble');
             if (!e.target.closest('#message-action-menu')) {
                 hideMessageActionMenu();
             }
-
             if (clickedBubble) {
-                e.stopPropagation(); // অন্য ক্লিক ইভেন্টকে বাধা দিন
+                e.stopPropagation();
                 showMessageActionMenu(clickedBubble);
-            }
-        });
-
-        document.addEventListener('click', () => {
-            if (!messageActionMenu.classList.contains('hidden')) {
+            } else if (!messageActionMenu.classList.contains('hidden')) {
                 hideMessageActionMenu();
             }
         });
 
+
+        // মেসেজ অ্যাকশন মেনুর ইভেন্ট লিসেনার (অপরিবর্তিত)
         messageActionMenu.addEventListener('click', (e) => {
             e.stopPropagation();
             const action = e.target.closest('.action-menu-btn')?.dataset.action;
@@ -834,32 +978,27 @@
                     deleteMessage(messageId);
                 });
             } else if (action === 'rename') {
-                // ভবিষ্যতে কার্যকারিতা যোগ করা হবে
                 alert('Rename feature is coming soon!');
             }
             hideMessageActionMenu();
         });
 
         function showMessageActionMenu(bubbleElement) {
-            // পুরনো সিলেকশন মুছে দিন
             if (currentlySelectedMessage) {
                 currentlySelectedMessage.classList.remove('selected');
             }
             
-            // নতুন মেসেজ সিলেক্ট করুন
             currentlySelectedMessage = bubbleElement;
             currentlySelectedMessage.classList.add('selected');
 
-            // মেনু পজিশন করুন
             const bubbleRect = bubbleElement.getBoundingClientRect();
             const chatRect = chatMessages.getBoundingClientRect();
 
             messageActionMenu.classList.remove('hidden');
             let top = bubbleRect.top - chatRect.top - messageActionMenu.offsetHeight - 10;
-            if(top < 5) top = bubbleRect.bottom - chatRect.top + 10; // যদি ওপরে জায়গা না থাকে
+            if(top < 5) top = bubbleRect.bottom - chatRect.top + 10;
             
             let left = bubbleRect.left + (bubbleRect.width / 2) - (messageActionMenu.offsetWidth / 2);
-            // মেনু যেন স্ক্রিনের বাইরে না যায়
             if(left < chatRect.left) left = chatRect.left + 5;
             if(left + messageActionMenu.offsetWidth > chatRect.right) left = chatRect.right - messageActionMenu.offsetWidth - 5;
 
