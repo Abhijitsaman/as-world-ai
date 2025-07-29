@@ -138,14 +138,17 @@
 
     /* === পরিবর্তন ২: নতুন ফ্লোটিং ইনপুট বার ডিজাইন === */
     #floating-input-container {
-        position: fixed;
-        bottom: 24px;
-        right: 24px;
-        z-index: 100;
-        display: flex;
-        justify-content: flex-end;
-        align-items: flex-end;
-    }
+    position: fixed;
+    bottom: 20px;
+    left: 50%; /* <<<--- নতুন লাইন */
+    transform: translateX(-50%); /* <<<--- নতুন লাইন */
+    width: 90%; /* <<<--- নতুন লাইন */
+    max-width: 600px; /* (এটাও যোগ করলে ভালো হয়) */
+    z-index: 100;
+    display: flex;
+    justify-content: center; /* <<<--- 'flex-end' থেকে পাল্টে 'center' করা হলো */
+    align-items: flex-end;
+}
 
     #fab-open-input-btn {
         width: 56px;
@@ -174,7 +177,7 @@
         border-radius: 28px;
         padding: 8px;
         padding-left: 20px;
-        width: calc(100vw - 48px);
+        width: 100%;
         max-width: 600px;
         
         /* অ্যানিমেশনের জন্য */
