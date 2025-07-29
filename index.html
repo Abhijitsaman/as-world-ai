@@ -437,8 +437,6 @@
         });
 
         // --- কোড হাইলাইটিং এবং মার্কডাউন কনফিগারেশন ---
-        // অনুরোধ ১ অনুযায়ী: এই কনফিগারেশনটিই স্বয়ংক্রিয়ভাবে কোড হাইলাইট করে।
-        // hljs.highlightElement() আলাদাভাবে কল করার প্রয়োজন নেই কারণ marked.js এটি অভ্যন্তরীণভাবে করে।
         marked.setOptions({
             highlight: function(code, lang) {
                 const language = hljs.getLanguage(lang) ? lang : 'plaintext';
@@ -523,7 +521,7 @@
             }
         }
         
-        // --- মেসেজ পাঠানোর ফাংশন (পরিবর্তিত) ---
+        // --- মেসেজ পাঠানোর ফাংশন (অপরিবর্তিত) ---
         const sendMessage = async () => {
             const messageText = userInput.value.trim();
             if (!messageText || isAiThinking || !currentUser) return;
@@ -547,7 +545,7 @@
             userInput.value = '';
             userInput.style.height = 'auto';
             sendBtn.disabled = true;
-            collapseInputBar(); // পরিবর্তন ২: মেসেজ পাঠানোর পর ইনপুট বার কলাপ্স হবে
+            collapseInputBar(); 
 
             isAiThinking = true;
             showTypingIndicator();
@@ -591,7 +589,8 @@
                         e.preventDefault();
                         if (currentChatId !== doc.id) {
                             loadMessages(doc.id);
-                            chatHeaderTitle.textContent = chat.title;
+                            // অনুরোধ ২ অনুযায়ী পরিবর্তন: হেডারের টাইটেল পরিবর্তন করার লাইনটি কমেন্ট আউট করা হলো
+                            // chatHeaderTitle.textContent = chat.title;
                         }
                         toggleSidebar(true);
                     });
@@ -665,6 +664,12 @@
 
             messageDiv.appendChild(bubble);
             chatMessages.appendChild(messageDiv);
+
+            // অনুরোধ ১ অনুযায়ী পরিবর্তন: সিনট্যাক্স হাইলাইটিং নিশ্চিত করা
+            // `marked.parse` করার পর এবং DOM-এ যোগ করার পর, আমরা কোড ব্লকগুলোকে আবার হাইলাইট করি।
+            messageDiv.querySelectorAll('pre code').forEach((block) => {
+                hljs.highlightElement(block);
+            });
 
             const codeBlocks = messageDiv.querySelectorAll('pre');
             codeBlocks.forEach(pre => {
